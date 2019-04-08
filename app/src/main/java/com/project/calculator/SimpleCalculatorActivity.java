@@ -174,15 +174,17 @@ public class SimpleCalculatorActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                if (!blockOperations) {
-                    addNumberToAllText();
-                    cButtonCounter = 0;
-                    if (allText.getText().toString().length() > 0) {
-                        setResult();
-                        allText.setText("");
+                if(!editText.getText().toString().equals("Niepoprawne wyrażenie")) {
+                    if (!blockOperations) {
+                        addNumberToAllText();
+                        cButtonCounter = 0;
+                        if (allText.getText().toString().length() > 0) {
+                            setResult();
+                            allText.setText("");
+                        }
+                        blockOperations = false;
+                        digitalClicked = true;
                     }
-                    blockOperations = false;
-                    digitalClicked = true;
                 }
             }
         });
@@ -191,10 +193,12 @@ public class SimpleCalculatorActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                if (!blockOperations) {
-                    cButtonCounter = 0;
-                    if (editText.getText().toString().length() > 0) {
-                        editText.setText(editText.getText().toString().substring(0, editText.getText().toString().length() - 1));
+                if(!editText.getText().toString().equals("Niepoprawne wyrażenie")) {
+                    if (!blockOperations) {
+                        cButtonCounter = 0;
+                        if (editText.getText().toString().length() > 0) {
+                            editText.setText(editText.getText().toString().substring(0, editText.getText().toString().length() - 1));
+                        }
                     }
                 }
             }
@@ -204,11 +208,13 @@ public class SimpleCalculatorActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                if (!blockOperations) {
-                    cButtonCounter = 0;
-                    if (editText.getText().toString().length() > 0) {
-                        editText.setText(String.valueOf(Double.parseDouble(editText.getText().toString()) * (-1.0)));
-                        //setResult();
+                if(!editText.getText().toString().equals("Niepoprawne wyrażenie")) {
+                    if (!blockOperations) {
+                        cButtonCounter = 0;
+                        if (editText.getText().toString().length() > 0) {
+                            editText.setText(String.valueOf(Double.parseDouble(editText.getText().toString()) * (-1.0)));
+                            //setResult();
+                        }
                     }
                 }
             }
@@ -253,7 +259,8 @@ public class SimpleCalculatorActivity extends Activity {
             blockOperations = false;
         } else {
             editText.setText("Niepoprawne wyrażenie");
-            blockOperations = true;
+            digitalClicked = false;
+            blockOperations = false;
         }
 
     }
@@ -267,15 +274,17 @@ public class SimpleCalculatorActivity extends Activity {
 
     public void addNumberToEditText(String number) {
 
-        if (!blockOperations) {
-            if (digitalClicked) {
-                if (number.equals("0") && editText.getText().toString().equals("0")) {
+        if(!editText.getText().toString().equals("Niepoprawne wyrażenie")) {
+            if (!blockOperations) {
+                if (digitalClicked) {
+                    if (number.equals("0") && editText.getText().toString().equals("0")) {
 
+                    } else
+                        editText.setText(editText.getText() + number);
                 } else
-                    editText.setText(editText.getText() + number);
-            } else
-                editText.setText(number);
-            digitalClicked = true;
+                    editText.setText(number);
+                digitalClicked = true;
+            }
         }
     }
 
@@ -288,22 +297,23 @@ public class SimpleCalculatorActivity extends Activity {
         else
             position = 1;
 
-        if (digitalClicked) {
-            if (!blockOperations) {
-                addNumberToAllText();
-                cButtonCounter = 0;
-                if (allText.getText().toString().length() > 0) {
-                    if (Character.isDigit(allText.getText().charAt(allText.getText().toString().length() - position))) {
-                        setResult();
-                        allText.setText(allText.getText() + operation);
-                        digitalClicked = false;
+        if(!editText.getText().toString().equals("Niepoprawne wyrażenie")){
+            if (digitalClicked) {
+                if (!blockOperations) {
+                    addNumberToAllText();
+                    cButtonCounter = 0;
+                    if (allText.getText().toString().length() > 0) {
+                        if (Character.isDigit(allText.getText().charAt(allText.getText().toString().length() - position))) {
+                            setResult();
+                            allText.setText(allText.getText() + operation);
+                            digitalClicked = false;
+                        }
                     }
                 }
+            } else if (editText.getText().toString().length() > 0 && allText.getText().toString().length() > 0) {
+                allText.setText(allText.getText().toString().substring(0, allText.getText().length() - 1) + operation);
             }
-        } else {
-            allText.setText(allText.getText().toString().substring(0, allText.getText().length() - 1) + operation);
         }
-
     }
 
 
